@@ -2,17 +2,11 @@ import { useState, useRef, useEffect, FC, useMemo } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { TTabMode } from '@utils-types';
 import { BurgerIngredientsUI } from '../ui/burger-ingredients';
-import { useDispatch } from 'react-redux';
-import { fetchIngredients } from '../../slices/ingredientsSlice';
-import { AppDispatch, RootState, useSelector } from '../../services/store';
+import { RootState, useSelector } from '../../services/store';
 
 export const BurgerIngredients: FC = () => {
-  /** TODO: взять переменные из стора */
-  const useAppDispatch = () => useDispatch<AppDispatch>();
-  const dispatch = useAppDispatch();
-  useEffect(() => {
-    dispatch(fetchIngredients());
-  }, []);
+  /** TODO: взять переменные из стора */ //DONE
+
   const ingredients = useSelector(
     (state: RootState) => state.ingredients.ingredients
   );
@@ -25,8 +19,6 @@ export const BurgerIngredients: FC = () => {
       ingredients.filter((item) => item.type === 'sauce')
     ];
   }, [ingredients]); // Пересчитает только при изменении ingredients
-
-  console.log(ingredients);
 
   const [currentTab, setCurrentTab] = useState<TTabMode>('bun');
   const titleBunRef = useRef<HTMLHeadingElement>(null);
