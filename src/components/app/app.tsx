@@ -19,6 +19,8 @@ import { useDispatch } from 'react-redux';
 import { fetchIngredients } from '../../slices/ingredientsSlice';
 import { AppDispatch, RootState, useSelector } from '../../services/store';
 import { useEffect } from 'react';
+import { checkUser } from '../../slices/userSlice';
+import { getCookie } from '../../utils/cookie';
 
 function App() {
   const location = useLocation();
@@ -28,9 +30,11 @@ function App() {
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(fetchIngredients());
+    dispatch(checkUser());
   }, []);
-  const userr = useSelector((state: RootState) => state.user.data);
-  console.log(userr);
+  const userr = useSelector((state: RootState) => state.user.accessToken);
+  console.log(localStorage.getItem('refreshToken'));
+  console.log(getCookie('accessToken'));
 
   return (
     <div className={styles.app}>

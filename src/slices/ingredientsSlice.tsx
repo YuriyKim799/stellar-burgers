@@ -14,6 +14,20 @@ const initialState: IIngredients = {
   error: null
 };
 
+export const fetchIngredients = createAsyncThunk(
+  'ingredients/fetchAll',
+  async (_, { rejectWithValue }) => {
+    try {
+      const data = await getIngredientsApi();
+      return data;
+    } catch (error) {
+      if (error instanceof Error) {
+        return rejectWithValue(error.message); // Тип payload будет string
+      }
+    }
+  }
+);
+
 const ingredientSlice = createSlice({
   name: 'ingredients',
   initialState,
@@ -34,19 +48,5 @@ const ingredientSlice = createSlice({
       });
   }
 });
-
-export const fetchIngredients = createAsyncThunk(
-  'ingredients/fetchAll',
-  async (_, { rejectWithValue }) => {
-    try {
-      const data = await getIngredientsApi();
-      return data;
-    } catch (error) {
-      if (error instanceof Error) {
-        return rejectWithValue(error.message); // Тип payload будет string
-      }
-    }
-  }
-);
 
 export default ingredientSlice;

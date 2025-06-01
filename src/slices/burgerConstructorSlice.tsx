@@ -1,14 +1,16 @@
-import { createSlice, current, PayloadAction } from '@reduxjs/toolkit';
-import { TConstructorIngredient } from '../utils/types';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { TConstructorIngredient, TOrder } from '../utils/types';
 
 interface IIngredients {
+  success: boolean;
   bun: TConstructorIngredient | null;
   ingredients: TConstructorIngredient[];
 }
 
 const initialState: IIngredients = {
   bun: null,
-  ingredients: []
+  ingredients: [],
+  success: false
 };
 
 const constructorBurgerSlice = createSlice({
@@ -67,4 +69,5 @@ export const {
   changePositionUp,
   removeIngredient
 } = constructorBurgerSlice.actions;
+
 export default constructorBurgerSlice;

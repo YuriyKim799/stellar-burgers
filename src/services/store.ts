@@ -8,12 +8,14 @@ import {
 import constructorBurgerSlice from '../slices/burgerConstructorSlice';
 import feedSlice from '../slices/feedsSlice';
 import userSlice from '../slices/userSlice';
+import orderSlice from '../slices/orderSlice';
 
 const rootReducer = combineReducers({
   ingredients: ingredientSlice.reducer,
   constructorIngredients: constructorBurgerSlice.reducer, // Указываем ключ для части состояния
   feeds: feedSlice.reducer,
-  user: userSlice.reducer
+  user: userSlice.reducer,
+  order: orderSlice.reducer
 }); // Заменить на импорт настоящего редьюсера // заменил
 
 const store = configureStore({
