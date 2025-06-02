@@ -20,7 +20,9 @@ export const BurgerConstructor: FC = () => {
     (state: RootState) => state.constructorIngredients
   );
 
-  const isAuthenticated = useSelector((state: RootState) => state.user.success);
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.user.isAuthenticated
+  );
   // const orderRequest = useSelector((state: RootState) => state.user.success);
 
   // const orderModalData = useSelector((state: RootState) => state.order.order);
@@ -40,7 +42,7 @@ export const BurgerConstructor: FC = () => {
 
   const onOrderClick = () => {
     // Проверка авторизации
-    if (!isAuthenticated || !constructorItems) {
+    if (!isAuthenticated) {
       navigate('/login');
       return;
     }

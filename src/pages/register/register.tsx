@@ -2,7 +2,7 @@ import { FC, SyntheticEvent, useState } from 'react';
 import { RegisterUI } from '@ui-pages';
 import { AppDispatch, RootState, useSelector } from '../../services/store';
 import { useDispatch } from 'react-redux';
-import { registerUser } from '../../slices/userSlice';
+import { registerUser } from '../../slices/userSliceMain';
 import { Navigate } from 'react-router-dom';
 
 export const Register: FC = () => {
@@ -13,8 +13,10 @@ export const Register: FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const isSuccess = useSelector((state: RootState) => state.user.success);
-  const error = useSelector((state: RootState) => state.user.registerUserError);
+  const isSuccess = useSelector(
+    (state: RootState) => state.user.isAuthenticated
+  );
+  const error = useSelector((state: RootState) => state.user.errorMessage);
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();

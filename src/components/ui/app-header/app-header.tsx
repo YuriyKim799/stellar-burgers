@@ -8,10 +8,14 @@ import {
   ProfileIcon
 } from '@zlden/react-developer-burger-ui-components';
 import { NavLink, useLocation } from 'react-router-dom';
+import { RootState, useSelector } from '../../../services/store';
 
 export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => {
   const location = useLocation(); // Хук для определения текущего пути
-
+  const success = useSelector((state: RootState) => state.user.isAuthenticated);
+  const user = useSelector((state: RootState) => state.user.userData);
+  console.log(success);
+  console.log(user);
   // Определяем активные состояния для ссылок
   const isConstructorActive = location.pathname === '/';
   const isFeedActive = location.pathname.startsWith('/feed');
@@ -47,7 +51,7 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => {
         </div>
         <div className={styles.link_position_last}>
           <NavLink
-            to={'/profile'}
+            to={success ? '/profile' : '/login'}
             className={
               isProfileActive ? `${styles.link_active}` : `${styles.link}`
             }

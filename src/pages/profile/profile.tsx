@@ -4,7 +4,7 @@ import { RootState, useSelector } from '../../services/store';
 
 export const Profile: FC = () => {
   /** TODO: взять переменную из стора */
-  const user = useSelector((state: RootState) => state.user.data);
+  const user = useSelector((state: RootState) => state.user.userData);
 
   const [formValue, setFormValue] = useState({
     name: user?.name || '',

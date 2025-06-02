@@ -19,7 +19,7 @@ import { useDispatch } from 'react-redux';
 import { fetchIngredients } from '../../slices/ingredientsSlice';
 import { AppDispatch, RootState, useSelector } from '../../services/store';
 import { useEffect } from 'react';
-import { checkUser } from '../../slices/userSlice';
+import { checkUser } from '../../slices/userSliceMain';
 import { getCookie } from '../../utils/cookie';
 
 function App() {
@@ -32,10 +32,10 @@ function App() {
     dispatch(fetchIngredients());
     dispatch(checkUser());
   }, []);
-  const userr = useSelector((state: RootState) => state.user.accessToken);
-  console.log(localStorage.getItem('refreshToken'));
-  console.log(getCookie('accessToken'));
-
+  // const userr = useSelector((state: RootState) => state.user.accessToken);
+  // console.log(localStorage.getItem('refreshToken'));
+  // console.log(getCookie('accessToken'));
+  // console.log(userr);
   return (
     <div className={styles.app}>
       <AppHeader />

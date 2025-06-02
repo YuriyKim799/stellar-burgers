@@ -8,7 +8,7 @@ type TUserState = {
   isAuthChecked: boolean;
   isAuthenticated: boolean;
   data: TUser | null;
-  registerUserError: string | undefined;
+  errorMessage: string | undefined;
   registerUserRequest: boolean;
   refreshToken: string;
   accessToken: string;
@@ -19,7 +19,7 @@ const initialState: TUserState = {
   isAuthChecked: false, // флаг для статуса проверки токена пользователя
   isAuthenticated: false,
   data: null,
-  registerUserError: '',
+  errorMessage: '',
   registerUserRequest: false,
   refreshToken: '',
   accessToken: '',
@@ -65,7 +65,7 @@ export const checkUser = createAsyncThunk(
 );
 
 const userSlice = createSlice({
-  name: 'user',
+  name: 'user/getUser',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -75,7 +75,7 @@ const userSlice = createSlice({
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.registerUserRequest = false;
-        state.registerUserError = action.payload || 'Ошибка регистрации';
+        state.errorMessage = action.error.message;
         state.isAuthChecked = true;
       })
       .addCase(registerUser.fulfilled, (state, action) => {
@@ -90,7 +90,8 @@ const userSlice = createSlice({
       .addCase(checkUser.pending, (state) => {
         state.registerUserRequest = true;
       })
-      .addCase(checkUser.rejected, (state) => {
+      .addCase(checkUser.rejected, (state, action) => {
+        state.errorMessage = action.error.message;
         state.success = false;
       })
       .addCase(checkUser.fulfilled, (state, action) => {
