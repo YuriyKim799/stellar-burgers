@@ -1,19 +1,23 @@
 import {
   getUserApi,
   loginUserApi,
+  logoutApi,
   registerUserApi,
   TAuthResponse,
   TLoginData,
-  TRegisterData
+  TRegisterData,
+  refreshToken
 } from '../utils/burger-api';
 
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TUser } from '@utils-types';
-import { setCookie } from '../utils/cookie';
+import { getCookie, setCookie } from '../utils/cookie';
 
 type TUserState = {
   isAuthChecked: boolean;
-  isAuthenticated: boolean;
+  isAuthenticated: boolean; // user зарегился залогинился и авторизовался
+  isLogout: boolean;
+  logoutMessage: string;
   userData: TUser | null;
   errorMessage: string | undefined;
   isLoading: boolean;
@@ -22,9 +26,11 @@ type TUserState = {
 };
 
 const initialState: TUserState = {
-  isAuthChecked: false,
-  isAuthenticated: false,
-  userData: null,
+  isAuthChecked: false, // есть ли на сервере такой персонаж
+  isAuthenticated: false, // user зарегился залогинился и авторизовался
+  isLogout: false, // user разлогинился или нет
+  logoutMessage: '', // сообщение с сервера при разлогировании
+  userData: null, // user инфа логин пассворд почта
   errorMessage: '',
   isLoading: false,
   refreshToken: '',
@@ -42,10 +48,8 @@ export const registerUser = createAsyncThunk<
     setCookie('accessToken', response.accessToken);
     localStorage.setItem('refreshToken', response.refreshToken);
     return response;
-  } catch (error) {
-    if (typeof error === 'string') return rejectWithValue(error);
-    if (error instanceof Error) return rejectWithValue(error.message);
-    return rejectWithValue('Неизвестная ошибка');
+  } catch (error: any) {
+    return rejectWithValue(error.message);
   }
 });
 
@@ -75,10 +79,34 @@ export const checkUser = createAsyncThunk(
     try {
       const response = await getUserApi();
       return response;
-    } catch (error) {
-      if (error instanceof Error) {
-        return rejectWithValue(error.message);
+    } catch (error: any) {
+      if (error.message === 'jwt expired') {
+        try {
+          // Пытаемся обновить токен
+          const refreshToken = localStorage.getItem('refreshToken');
+          if (!refreshToken) {
+            return rejectWithValue('Refresh token отсутствует');
+          }
+          // Повторяем запрос с новым токеном
+          const response = await getUserApi();
+          return response;
+        } catch (refreshError) {
+          return rejectWithValue('Ошибка обновления токена');
+        }
       }
+      return rejectWithValue(error.message || 'Ошибка проверки');
+    }
+  }
+);
+
+export const logoutUser = createAsyncThunk(
+  'user/logout',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await logoutApi();
+      return response;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -101,6 +129,10 @@ const userSlice = createSlice({
         state.errorMessage = '';
       })
       .addCase(checkUser.pending, (state) => {
+        state.isLoading = true;
+        state.errorMessage = '';
+      })
+      .addCase(logoutUser.pending, (state) => {
         state.isLoading = true;
         state.errorMessage = '';
       })
@@ -127,6 +159,14 @@ const userSlice = createSlice({
         state.isAuthChecked = true;
         state.isLoading = false;
       })
+      .addCase(logoutUser.fulfilled, (state, action) => {
+        state.isLogout = action.payload.success;
+        state.userData = null;
+        state.isAuthenticated = false;
+        state.isAuthChecked = true; // Помечаем проверку как завершённую
+        setCookie('accessToken', ''); // Удаляем куку
+        localStorage.removeItem('refreshToken'); // Удаляем из localStorage
+      })
       // Ошибочные операции
       .addCase(registerUser.rejected, (state, action) => {
         state.isLoading = false;
@@ -134,12 +174,18 @@ const userSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoading = false;
+        state.isAuthChecked = true; // Важно: помечаем проверку как завершённую
+        state.isAuthenticated = false; // Гарантируем сброс авторизации
+        state.userData = null;
         state.errorMessage = (action.payload as string) || 'Ошибка авторизации';
       })
       .addCase(checkUser.rejected, (state, action) => {
         state.isLoading = false;
-        state.isAuthChecked = true;
         state.errorMessage = (action.payload as string) || 'Ошибка проверки';
+      })
+      .addCase(logoutUser.rejected, (state, action) => {
+        state.isLogout = false;
+        state.errorMessage = action.payload as string;
       });
   }
 });

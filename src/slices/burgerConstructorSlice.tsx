@@ -59,6 +59,10 @@ const constructorBurgerSlice = createSlice({
     removeIngredient: (state, action: PayloadAction<number>) => {
       const index = action.payload;
       state.ingredients.splice(index, 1);
+    },
+    clearIngedients: (state) => {
+      state.ingredients = [];
+      state.bun = null;
     }
   }
 });
@@ -67,7 +71,8 @@ export const {
   addIngredient,
   changePositionDown,
   changePositionUp,
-  removeIngredient
+  removeIngredient,
+  clearIngedients
 } = constructorBurgerSlice.actions;
 
 export default constructorBurgerSlice;

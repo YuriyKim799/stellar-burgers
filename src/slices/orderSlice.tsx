@@ -51,7 +51,12 @@ export const orderBurgerThunk = createAsyncThunk<TNewOrderResponse, string[]>(
 const orderSlice = createSlice({
   name: 'order',
   initialState,
-  reducers: {},
+  reducers: {
+    resetOrder(state) {
+      state.orderRequest = false;
+      state.orderModalData = null;
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(orderBurgerThunk.pending, (state) => {
@@ -69,3 +74,4 @@ const orderSlice = createSlice({
 });
 
 export default orderSlice;
+export const { resetOrder } = orderSlice.actions;

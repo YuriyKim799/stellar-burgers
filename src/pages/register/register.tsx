@@ -13,7 +13,7 @@ export const Register: FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const isSuccess = useSelector(
+  const isAuthenticated = useSelector(
     (state: RootState) => state.user.isAuthenticated
   );
   const error = useSelector((state: RootState) => state.user.errorMessage);
@@ -23,7 +23,7 @@ export const Register: FC = () => {
     dispatch(registerUser({ name, email, password }));
   };
 
-  if (isSuccess) {
+  if (isAuthenticated) {
     return <Navigate to={'/'} />;
   }
 

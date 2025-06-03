@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import styles from './app-header.module.css';
 import { TAppHeaderUIProps } from './type';
 import {
@@ -12,14 +12,14 @@ import { RootState, useSelector } from '../../../services/store';
 
 export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => {
   const location = useLocation(); // Хук для определения текущего пути
-  const success = useSelector((state: RootState) => state.user.isAuthenticated);
-  const user = useSelector((state: RootState) => state.user.userData);
-  console.log(success);
-  console.log(user);
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.user.isAuthenticated
+  );
+
   // Определяем активные состояния для ссылок
   const isConstructorActive = location.pathname === '/';
   const isFeedActive = location.pathname.startsWith('/feed');
-  const isProfileActive = location.pathname.startsWith('/profile');
+  const isProfileActive = ['/profile', '/login'].includes(location.pathname);
 
   return (
     <header className={styles.header}>
@@ -51,7 +51,7 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => {
         </div>
         <div className={styles.link_position_last}>
           <NavLink
-            to={success ? '/profile' : '/login'}
+            to={isAuthenticated ? '/profile' : '/login'}
             className={
               isProfileActive ? `${styles.link_active}` : `${styles.link}`
             }

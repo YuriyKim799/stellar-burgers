@@ -4,13 +4,13 @@ import { getIngredientsApi } from '../utils/burger-api';
 
 interface IIngredients {
   ingredients: TIngredient[] | undefined;
-  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  isIngredientsLoading: boolean;
   error: string | null;
 }
 
 const initialState: IIngredients = {
   ingredients: [],
-  status: 'idle',
+  isIngredientsLoading: false,
   error: null
 };
 
@@ -35,15 +35,15 @@ const ingredientSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchIngredients.pending, (state) => {
-        state.status = 'loading';
+        state.isIngredientsLoading = true;
         state.error = null;
       })
       .addCase(fetchIngredients.fulfilled, (state, action) => {
-        state.status = 'succeeded';
+        state.isIngredientsLoading = false;
         state.ingredients = action.payload;
       })
       .addCase(fetchIngredients.rejected, (state, action) => {
-        state.status = 'failed';
+        state.isIngredientsLoading = true;
         state.error = action.payload as string;
       });
   }

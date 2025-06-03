@@ -5,8 +5,7 @@ import { BurgerIngredientsUI } from '../ui/burger-ingredients';
 import { RootState, useSelector } from '../../services/store';
 
 export const BurgerIngredients: FC = () => {
-  /** TODO: взять переменные из стора */ //DONE
-
+  /** TODO: взять переменные из стора */
   const ingredients = useSelector(
     (state: RootState) => state.ingredients.ingredients
   );
