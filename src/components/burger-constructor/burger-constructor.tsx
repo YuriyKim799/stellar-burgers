@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../services/store';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { orderBurgerThunk, resetOrder } from '../../slices/orderSlice';
+import { orderBurger, resetOrder } from '../../slices/orderBurgerSlice';
 import { clearIngedients } from '../../slices/burgerConstructorSlice';
 
 export const BurgerConstructor: FC = () => {
@@ -23,7 +23,7 @@ export const BurgerConstructor: FC = () => {
   );
 
   const { orderRequest, orderModalData } = useSelector(
-    (state: RootState) => state.order
+    (state: RootState) => state.orderBurger
   );
 
   const onOrderClick = () => {
@@ -38,7 +38,7 @@ export const BurgerConstructor: FC = () => {
         ...constructorItems.ingredients.map((ing) => ing._id)
       ];
       // Отправляем запрос на создание заказа
-      dispatch(orderBurgerThunk(ingredientsIds));
+      dispatch(orderBurger(ingredientsIds));
     }
     navigate('/login');
   };

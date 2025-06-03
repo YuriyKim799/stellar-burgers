@@ -21,7 +21,7 @@ import { AppDispatch, RootState, useSelector } from '../../services/store';
 import { useEffect } from 'react';
 import { checkUser } from '../../slices/userSliceMain';
 import { getCookie } from '../../utils/cookie';
-import { fetchFeeds } from '../../slices/feedsSlice';
+import { getOrdersAll } from '../../slices/ordersSlice';
 
 function App() {
   const location = useLocation();
@@ -32,7 +32,7 @@ function App() {
   useEffect(() => {
     dispatch(fetchIngredients());
     dispatch(checkUser());
-    dispatch(fetchFeeds());
+    dispatch(getOrdersAll());
   }, []);
 
   return (

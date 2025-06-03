@@ -6,16 +6,16 @@ import {
   useSelector as selectorHook
 } from 'react-redux';
 import constructorBurgerSlice from '../slices/burgerConstructorSlice';
-import feedSlice from '../slices/feedsSlice';
+import ordersSlice from '../slices/ordersSlice';
 import userSlice from '../slices/userSliceMain';
-import orderSlice from '../slices/orderSlice';
+import orderBurgerSlice from '../slices/orderBurgerSlice';
 
 const rootReducer = combineReducers({
   ingredients: ingredientSlice.reducer,
   constructorIngredients: constructorBurgerSlice.reducer, // Указываем ключ для части состояния
-  feeds: feedSlice.reducer,
+  orders: ordersSlice.reducer,
   user: userSlice.reducer,
-  order: orderSlice.reducer
+  orderBurger: orderBurgerSlice.reducer
 }); // Заменить на импорт настоящего редьюсера // заменил
 
 const store = configureStore({
