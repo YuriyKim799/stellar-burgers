@@ -6,15 +6,15 @@ import {
   TAuthResponse,
   TLoginData,
   TRegisterData,
-  refreshToken
+  TUserResponse,
+  updateUserApi
 } from '../utils/burger-api';
 
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TUser } from '@utils-types';
-import { getCookie, setCookie } from '../utils/cookie';
+import { setCookie } from '../utils/cookie';
 
 type TUserState = {
-  isAuthChecked: boolean;
   isAuthenticated: boolean; // user зарегился залогинился и авторизовался
   isLogout: boolean;
   logoutMessage: string;
@@ -26,7 +26,6 @@ type TUserState = {
 };
 
 const initialState: TUserState = {
-  isAuthChecked: false, // есть ли на сервере такой персонаж
   isAuthenticated: false, // user зарегился залогинился и авторизовался
   isLogout: false, // user разлогинился или нет
   logoutMessage: '', // сообщение с сервера при разлогировании
@@ -111,12 +110,23 @@ export const logoutUser = createAsyncThunk(
   }
 );
 
+export const updateUser = createAsyncThunk<
+  TUserResponse,
+  Partial<TRegisterData>,
+  { rejectValue: string }
+>('user/update', async (updateData, { rejectWithValue }) => {
+  try {
+    const response = await updateUserApi(updateData);
+    return response;
+  } catch (error: any) {
+    return rejectWithValue(error.message);
+  }
+});
+
 const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {
-    // Можно добавить редукторы для выхода пользователя итд
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       // Ожидающие операции
@@ -136,19 +146,20 @@ const userSlice = createSlice({
         state.isLoading = true;
         state.errorMessage = '';
       })
+      .addCase(updateUser.pending, (state) => {
+        state.isLoading = true;
+        state.errorMessage = '';
+      })
       // Успешные операции
       .addCase(registerUser.fulfilled, (state, action) => {
         state.userData = action.payload.user;
         state.isAuthenticated = true;
-        state.isAuthChecked = true;
         state.refreshToken = action.payload.refreshToken;
         state.accessToken = action.payload.accessToken;
-        state.isLoading = false;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.userData = action.payload.user;
         state.isAuthenticated = true;
-        state.isAuthChecked = true;
         state.refreshToken = action.payload.refreshToken;
         state.accessToken = action.payload.accessToken;
         state.isLoading = false;
@@ -156,16 +167,19 @@ const userSlice = createSlice({
       .addCase(checkUser.fulfilled, (state, action) => {
         state.userData = action.payload ? action.payload.user : null; // Сохраняем данные пользователя
         state.isAuthenticated = true;
-        state.isAuthChecked = true;
         state.isLoading = false;
       })
-      .addCase(logoutUser.fulfilled, (state, action) => {
-        state.isLogout = action.payload.success;
+      .addCase(logoutUser.fulfilled, (state) => {
         state.userData = null;
         state.isAuthenticated = false;
-        state.isAuthChecked = true; // Помечаем проверку как завершённую
         setCookie('accessToken', ''); // Удаляем куку
         localStorage.removeItem('refreshToken'); // Удаляем из localStorage
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        if (action.payload.user) {
+          state.userData = action.payload.user;
+        }
       })
       // Ошибочные операции
       .addCase(registerUser.rejected, (state, action) => {
@@ -174,17 +188,17 @@ const userSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoading = false;
-        state.isAuthChecked = true; // Важно: помечаем проверку как завершённую
-        state.isAuthenticated = false; // Гарантируем сброс авторизации
+        state.isAuthenticated = false;
         state.userData = null;
         state.errorMessage = (action.payload as string) || 'Ошибка авторизации';
       })
       .addCase(checkUser.rejected, (state, action) => {
-        state.isLoading = false;
         state.errorMessage = (action.payload as string) || 'Ошибка проверки';
       })
       .addCase(logoutUser.rejected, (state, action) => {
-        state.isLogout = false;
+        state.errorMessage = action.payload as string;
+      })
+      .addCase(updateUser.rejected, (state, action) => {
         state.errorMessage = action.payload as string;
       });
   }

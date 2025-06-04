@@ -10,12 +10,11 @@ export const OrderInfo: FC = () => {
   const dispatch = useDispatch();
   const { number } = useParams();
   /** TODO: взять переменные orderData и ingredients из стора */
-  const dataOrder = useSelector((state: RootState) => state.orders.order);
 
   const ingredients: TIngredient[] =
     useSelector((state: RootState) => state.ingredients.ingredients) ?? [];
 
-  const orderData = dataOrder;
+  const orderData = useSelector((state: RootState) => state.orders.order);
 
   useEffect(() => {
     dispatch(getFeedByNumber(Number(number)));

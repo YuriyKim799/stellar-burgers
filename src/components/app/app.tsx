@@ -17,28 +17,29 @@ import { Route, Routes } from 'react-router-dom';
 import { ProtectedRoute } from '../routing/ProtectedRoute';
 import { useDispatch } from 'react-redux';
 import { fetchIngredients } from '../../slices/ingredientsSlice';
-import { AppDispatch, RootState, useSelector } from '../../services/store';
+import { AppDispatch } from '../../services/store';
 import { useEffect } from 'react';
 import { checkUser } from '../../slices/userSliceMain';
-import { getCookie } from '../../utils/cookie';
-import { getOrdersAll } from '../../slices/ordersSlice';
+import { getOrdersAll, getUsersOrders } from '../../slices/ordersSlice';
 
 function App() {
   const location = useLocation();
   const navigate = useNavigate();
-  const state = location.state; // Состояние фоновой локации
+  const background = location.state?.background; // Состояние фоновой локации
+
   const useAppDispatch = () => useDispatch<AppDispatch>();
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(fetchIngredients());
     dispatch(checkUser());
     dispatch(getOrdersAll());
-  }, []);
+    dispatch(getUsersOrders());
+  }, [dispatch]);
 
   return (
     <div className={styles.app}>
       <AppHeader />
-      <Routes location={state?.backgroundLocation || location}>
+      <Routes location={background || location}>
         <Route path='/' element={<ConstructorPage />} />
         <Route path='/feed' element={<Feed />} />
         <Route
@@ -92,19 +93,6 @@ function App() {
         <Route path='*' element={<NotFound404 />} />
 
         <Route
-          path='/feed/:number'
-          element={
-            <Modal
-              title={''}
-              onClose={() => {
-                navigate(-1);
-              }}
-            >
-              <OrderInfo />
-            </Modal>
-          }
-        />
-        <Route
           path='/profile/orders/:number'
           element={
             <ProtectedRoute>
@@ -114,7 +102,7 @@ function App() {
         />
       </Routes>
 
-      {state?.backgroundLocation && (
+      {background && (
         <Routes>
           <Route
             path='/ingredients/:id'
@@ -126,6 +114,30 @@ function App() {
                 }}
               >
                 <IngredientDetails />
+              </Modal>
+            }
+          />
+
+          <Route
+            path='/feed/:number'
+            element={
+              <Modal
+                title={`#${location.pathname.split('/').pop()}`}
+                onClose={() => navigate(-1)}
+              >
+                <OrderInfo />
+              </Modal>
+            }
+          />
+
+          <Route
+            path='/profile/orders/:number'
+            element={
+              <Modal
+                title={`#${location.pathname.split('/').pop()}`}
+                onClose={() => navigate(-1)}
+              >
+                <OrderInfo />
               </Modal>
             }
           />

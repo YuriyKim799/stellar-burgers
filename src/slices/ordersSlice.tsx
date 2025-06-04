@@ -3,12 +3,14 @@ import { TOrder } from '../utils/types';
 import {
   getFeedsApi,
   TOrderResponse,
-  getOrderByNumberApi
+  getOrderByNumberApi,
+  getOrdersApi
 } from '../utils/burger-api';
 
 interface IOrders {
   isLoading: boolean;
   orders: TOrder[] | undefined;
+  userOrders: TOrder[] | undefined;
   total: number | null | undefined;
   totalToday: number | null | undefined;
   error: string | null;
@@ -19,6 +21,7 @@ interface IOrders {
 const initialState: IOrders = {
   isLoading: false,
   orders: [],
+  userOrders: [],
   order: null,
   total: null,
   totalToday: null,
@@ -31,6 +34,20 @@ export const getOrdersAll = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const data = await getFeedsApi();
+      return data;
+    } catch (error) {
+      if (error instanceof Error) {
+        return rejectWithValue(error.message); // Тип payload будет string
+      }
+    }
+  }
+);
+
+export const getUsersOrders = createAsyncThunk(
+  'userOrders/fetchAll',
+  async (_, { rejectWithValue }) => {
+    try {
+      const data = await getOrdersApi();
       return data;
     } catch (error) {
       if (error instanceof Error) {
@@ -59,7 +76,7 @@ export const getOrderByNumber = createAsyncThunk<TOrderResponse, number>(
           : 'Неизвестная ошибка';
 
       return rejectWithValue({
-        orderErrorMessage: errorMessage
+        error: errorMessage
       });
     }
   }
@@ -99,6 +116,15 @@ const ordersSlice = createSlice({
       .addCase(getOrderByNumber.fulfilled, (state, action) => {
         state.isLoading = false;
         state.orders = action.payload.orders;
+      })
+      .addCase(getUsersOrders.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getUsersOrders.rejected, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(getUsersOrders.fulfilled, (state, action) => {
+        state.userOrders = action.payload;
       });
   }
 });

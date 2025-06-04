@@ -11,8 +11,8 @@ export const Login: FC = () => {
   const useAppDispatch = () => useDispatch<AppDispatch>();
   const dispatch = useAppDispatch();
 
-  const loginSuccess = useSelector(
-    (state: RootState) => state.user.isAuthChecked
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.user.isAuthenticated
   );
   const errorMessage = useSelector(
     (state: RootState) => state.user.errorMessage
@@ -22,7 +22,7 @@ export const Login: FC = () => {
     dispatch(loginUser({ email, password }));
   };
 
-  if (loginSuccess) {
+  if (isAuthenticated) {
     return <Navigate to={'/'} />;
   }
 
