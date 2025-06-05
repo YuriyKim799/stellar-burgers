@@ -172,6 +172,7 @@ const userSlice = createSlice({
       .addCase(logoutUser.fulfilled, (state) => {
         state.userData = null;
         state.isAuthenticated = false;
+        state.isLogout = true;
         setCookie('accessToken', ''); // Удаляем куку
         localStorage.removeItem('refreshToken'); // Удаляем из localStorage
       })
