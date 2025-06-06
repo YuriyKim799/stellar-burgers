@@ -21,6 +21,9 @@ import { AppDispatch } from '../../services/store';
 import { useEffect } from 'react';
 import { checkUser } from '../../slices/userSliceMain';
 import { getOrdersAll, getUsersOrders } from '../../slices/ordersSlice';
+import { OrderPage } from '../order-page/OrderPage';
+import { PrivateOrderPage } from '../private-order-page/PrivateOrderPage';
+import { IngredientPage } from '../ingredient-page/ingredient-page';
 
 function App() {
   const location = useLocation();
@@ -53,7 +56,7 @@ function App() {
         <Route
           path='/register'
           element={
-            <ProtectedRoute onlyUnAuth>
+            <ProtectedRoute>
               <Register />
             </ProtectedRoute>
           }
@@ -61,7 +64,7 @@ function App() {
         <Route
           path='/forgot-password'
           element={
-            <ProtectedRoute>
+            <ProtectedRoute onlyUnAuth>
               <ForgotPassword />
             </ProtectedRoute>
           }
@@ -69,7 +72,7 @@ function App() {
         <Route
           path='/reset-password'
           element={
-            <ProtectedRoute>
+            <ProtectedRoute onlyUnAuth>
               <ResetPassword />
             </ProtectedRoute>
           }
@@ -77,7 +80,7 @@ function App() {
         <Route
           path='/profile'
           element={
-            <ProtectedRoute onlyUnAuth={false}>
+            <ProtectedRoute>
               <Profile />
             </ProtectedRoute>
           }
@@ -91,15 +94,9 @@ function App() {
           }
         />
         <Route path='*' element={<NotFound404 />} />
-
-        <Route
-          path='/profile/orders/:number'
-          element={
-            <ProtectedRoute>
-              <OrderInfo />
-            </ProtectedRoute>
-          }
-        />
+        <Route path='/ingredients/:id' element={<IngredientPage />} />
+        <Route path='/feed/:number' element={<OrderPage />} />
+        <Route path='/profile/orders/:number' element={<PrivateOrderPage />} />
       </Routes>
 
       {background && (
