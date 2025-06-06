@@ -17,7 +17,7 @@ export const ConstructorPageUI: FC<ConstructorPageUIProps> = ({
         <h1
           className={`${styles.title} text text_type_main-large mt-10 mb-5 pl-5`}
         >
-          Соберите бургер
+          Соберите бургер 1
         </h1>
         <div className={`${styles.main} pl-5 pr-5`}>
           <BurgerIngredients />
