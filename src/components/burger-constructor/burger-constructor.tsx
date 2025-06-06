@@ -39,8 +39,9 @@ export const BurgerConstructor: FC = () => {
       ];
       // Отправляем запрос на создание заказа
       dispatch(orderBurger(ingredientsIds));
+    } else {
+      navigate('/login');
     }
-    navigate('/login');
   };
 
   const closeOrderModal = () => {
