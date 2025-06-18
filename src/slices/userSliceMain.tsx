@@ -79,20 +79,6 @@ export const checkUser = createAsyncThunk(
       const response = await getUserApi();
       return response;
     } catch (error: any) {
-      if (error.message === 'jwt expired') {
-        try {
-          // Пытаемся обновить токен
-          const refreshToken = localStorage.getItem('refreshToken');
-          if (!refreshToken) {
-            return rejectWithValue('Refresh token отсутствует');
-          }
-          // Повторяем запрос с новым токеном
-          const response = await getUserApi();
-          return response;
-        } catch (refreshError) {
-          return rejectWithValue('Ошибка обновления токена');
-        }
-      }
       return rejectWithValue(error.message || 'Ошибка проверки');
     }
   }
@@ -171,6 +157,7 @@ const userSlice = createSlice({
       .addCase(logoutUser.fulfilled, (state) => {
         state.userData = null;
         state.isAuthenticated = false;
+        state.isLoading = false;
         setCookie('accessToken', ''); // Удаляем куку
         localStorage.removeItem('refreshToken'); // Удаляем из localStorage
       })
@@ -199,6 +186,7 @@ const userSlice = createSlice({
         state.errorMessage = action.payload as string;
       })
       .addCase(updateUser.rejected, (state, action) => {
+        state.isLoading = false;
         state.errorMessage = action.payload as string;
       });
   }
