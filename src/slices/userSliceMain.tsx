@@ -143,7 +143,6 @@ const userSlice = createSlice({
         state.errorMessage = '';
       })
       .addCase(logoutUser.pending, (state) => {
-        state.isLoading = true;
         state.errorMessage = '';
       })
       .addCase(updateUser.pending, (state) => {
@@ -193,6 +192,7 @@ const userSlice = createSlice({
         state.errorMessage = (action.payload as string) || 'Ошибка авторизации';
       })
       .addCase(checkUser.rejected, (state, action) => {
+        state.isLoading = false;
         state.errorMessage = (action.payload as string) || 'Ошибка проверки';
       })
       .addCase(logoutUser.rejected, (state, action) => {

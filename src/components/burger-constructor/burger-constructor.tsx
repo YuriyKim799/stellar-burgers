@@ -5,8 +5,11 @@ import { useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../services/store';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { orderBurger, resetOrder } from '../../slices/orderBurgerSlice';
-import { clearIngedients } from '../../slices/burgerConstructorSlice';
+import {
+  orderBurger,
+  resetOrder
+} from '../../slices/orderBurgerSlice/orderBurgerSlice';
+import { clearIngedients } from '../../slices/burgerConstructorSlice/burgerConstructorSlice';
 
 export const BurgerConstructor: FC = () => {
   /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */

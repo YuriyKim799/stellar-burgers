@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { TOrder } from '../utils/types';
-import { orderBurgerApi, TNewOrderResponse } from '@api';
+import { TOrder } from '../../utils/types';
+import { orderBurgerApi, TNewOrderResponse } from '../../utils/burger-api';
 interface IOrder {
   orderRequest: boolean;
   orderModalData: TOrder | null;

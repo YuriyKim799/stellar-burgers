@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { TIngredient } from '../utils/types';
-import { getIngredientsApi } from '../utils/burger-api';
+import { TIngredient } from '../../utils/types';
+import { getIngredientsApi } from '../../utils/burger-api';
 
 interface IIngredients {
   ingredients: TIngredient[] | undefined;
@@ -43,7 +43,7 @@ const ingredientSlice = createSlice({
         state.ingredients = action.payload;
       })
       .addCase(fetchIngredients.rejected, (state, action) => {
-        state.isIngredientsLoading = true;
+        state.isIngredientsLoading = false;
         state.error = action.payload as string;
       });
   }

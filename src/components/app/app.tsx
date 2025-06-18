@@ -16,7 +16,7 @@ import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
 import { Route, Routes } from 'react-router-dom';
 import { ProtectedRoute } from '../routing/ProtectedRoute';
 import { useDispatch } from 'react-redux';
-import { fetchIngredients } from '../../slices/ingredientsSlice';
+import { fetchIngredients } from '../../slices/ingredientsSlice/ingredientsSlice';
 import { AppDispatch } from '../../services/store';
 import { useEffect } from 'react';
 import { checkUser } from '../../slices/userSliceMain';

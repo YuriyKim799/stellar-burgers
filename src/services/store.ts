@@ -1,16 +1,16 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
-import ingredientSlice from '../slices/ingredientsSlice';
+import ingredientSlice from '../slices/ingredientsSlice/ingredientsSlice';
 import {
   TypedUseSelectorHook,
   useDispatch as dispatchHook,
   useSelector as selectorHook
 } from 'react-redux';
-import constructorBurgerSlice from '../slices/burgerConstructorSlice';
+import constructorBurgerSlice from '../slices/burgerConstructorSlice/burgerConstructorSlice';
 import ordersSlice from '../slices/ordersSlice';
 import userSlice from '../slices/userSliceMain';
-import orderBurgerSlice from '../slices/orderBurgerSlice';
+import orderBurgerSlice from '../slices/orderBurgerSlice/orderBurgerSlice';
 
-const rootReducer = combineReducers({
+export const rootReducer = combineReducers({
   ingredients: ingredientSlice.reducer,
   constructorIngredients: constructorBurgerSlice.reducer, // Указываем ключ для части состояния
   orders: ordersSlice.reducer,

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { TConstructorIngredient, TOrder } from '../utils/types';
+import { TConstructorIngredient, TOrder } from '../../utils/types';
 
 interface IIngredients {
   success: boolean;
