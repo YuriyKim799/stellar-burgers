@@ -3,7 +3,7 @@ import { FeedUI } from '@ui-pages';
 import { TOrder } from '@utils-types';
 import { FC } from 'react';
 import { RootState, useDispatch, useSelector } from '../../services/store';
-import { getOrdersAll } from '../../slices/ordersSlice';
+import { getOrdersAll } from '../../slices/ordersSlice/ordersSlice';
 import { Modal } from '../../components/modal/modal';
 
 export const Feed: FC = () => {

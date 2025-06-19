@@ -64,6 +64,7 @@ export const BurgerConstructor: FC = () => {
 
   return (
     <BurgerConstructorUI
+      data-cy='burger-constructor'
       price={price}
       orderRequest={orderRequest}
       constructorItems={constructorItems}

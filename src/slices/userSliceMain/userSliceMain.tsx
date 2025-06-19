@@ -8,11 +8,11 @@ import {
   TRegisterData,
   TUserResponse,
   updateUserApi
-} from '../utils/burger-api';
+} from '../../utils/burger-api';
 
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TUser } from '@utils-types';
-import { setCookie } from '../utils/cookie';
+import { setCookie } from '../../utils/cookie';
 
 type TUserState = {
   isAuthenticated: boolean; // user зарегился залогинился и авторизовался
@@ -139,6 +139,7 @@ const userSlice = createSlice({
       .addCase(registerUser.fulfilled, (state, action) => {
         state.userData = action.payload.user;
         state.isAuthenticated = true;
+        state.isLoading = false;
         state.refreshToken = action.payload.refreshToken;
         state.accessToken = action.payload.accessToken;
       })
@@ -158,6 +159,8 @@ const userSlice = createSlice({
         state.userData = null;
         state.isAuthenticated = false;
         state.isLoading = false;
+        state.accessToken = '';
+        state.refreshToken = '';
         setCookie('accessToken', ''); // Удаляем куку
         localStorage.removeItem('refreshToken'); // Удаляем из localStorage
       })

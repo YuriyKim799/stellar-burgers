@@ -1,11 +1,11 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { TOrder } from '../utils/types';
+import { TOrder } from '../../utils/types';
 import {
   getFeedsApi,
   TOrderResponse,
   getOrderByNumberApi,
   getOrdersApi
-} from '../utils/burger-api';
+} from '../../utils/burger-api';
 
 interface IOrders {
   isLoading: boolean;
@@ -104,7 +104,7 @@ const ordersSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(getOrdersAll.rejected, (state, action) => {
-        state.isLoading = true;
+        state.isLoading = false;
         state.error = action.payload as string;
       })
       .addCase(getOrderByNumber.pending, (state) => {
@@ -125,6 +125,7 @@ const ordersSlice = createSlice({
       })
       .addCase(getUsersOrders.fulfilled, (state, action) => {
         state.userOrders = action.payload;
+        state.isLoading = false;
       });
   }
 });

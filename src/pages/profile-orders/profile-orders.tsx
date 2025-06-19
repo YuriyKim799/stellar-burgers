@@ -3,7 +3,7 @@ import { TOrder } from '@utils-types';
 import { FC, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState, useDispatch } from '../../services/store';
-import { getUsersOrders } from '../../slices/ordersSlice';
+import { getUsersOrders } from '../../slices/ordersSlice/ordersSlice';
 
 export const ProfileOrders: FC = () => {
   /** TODO: взять переменную из стора */

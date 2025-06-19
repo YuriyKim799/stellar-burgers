@@ -4,7 +4,10 @@ import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
 import { RootState, useDispatch, useSelector } from '../../services/store';
 import { useParams } from 'react-router-dom';
-import { getFeedByNumber, getOrderByNumber } from '../../slices/ordersSlice';
+import {
+  getFeedByNumber,
+  getOrderByNumber
+} from '../../slices/ordersSlice/ordersSlice';
 
 type OrderInfoProps = {
   isPrivate?: boolean;

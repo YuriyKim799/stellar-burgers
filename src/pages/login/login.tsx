@@ -3,7 +3,7 @@ import { LoginUI } from '@ui-pages';
 import { useDispatch } from 'react-redux';
 import { AppDispatch, RootState, useSelector } from '../../services/store';
 import { Navigate } from 'react-router-dom';
-import { checkUser, loginUser } from '../../slices/userSliceMain';
+import { checkUser, loginUser } from '../../slices/userSliceMain/userSliceMain';
 
 export const Login: FC = () => {
   const [email, setEmail] = useState('');

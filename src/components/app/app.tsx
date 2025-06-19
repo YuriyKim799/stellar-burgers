@@ -19,8 +19,11 @@ import { useDispatch } from 'react-redux';
 import { fetchIngredients } from '../../slices/ingredientsSlice/ingredientsSlice';
 import { AppDispatch } from '../../services/store';
 import { useEffect } from 'react';
-import { checkUser } from '../../slices/userSliceMain';
-import { getOrdersAll, getUsersOrders } from '../../slices/ordersSlice';
+import { checkUser } from '../../slices/userSliceMain/userSliceMain';
+import {
+  getOrdersAll,
+  getUsersOrders
+} from '../../slices/ordersSlice/ordersSlice';
 import { OrderPage } from '../order-page/OrderPage';
 import { PrivateOrderPage } from '../private-order-page/PrivateOrderPage';
 import { IngredientPage } from '../ingredient-page/ingredient-page';

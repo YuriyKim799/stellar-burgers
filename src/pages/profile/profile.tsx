@@ -1,7 +1,7 @@
 import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
 import { RootState, useDispatch, useSelector } from '../../services/store';
-import { updateUser } from '../../slices/userSliceMain';
+import { updateUser } from '../../slices/userSliceMain/userSliceMain';
 import { Preloader } from '@ui';
 import { Modal } from '@components';
 
