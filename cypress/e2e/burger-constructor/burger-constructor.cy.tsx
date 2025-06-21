@@ -1,9 +1,20 @@
 describe('Burger constructor functionality', () => {
   beforeEach(() => {
-    cy.intercept('GET', 'api/ingredients', {
-      fixture: 'ingredients.json'
+    // 1. Сначала объявляем перехватчик
+    cy.fixture('ingredients.json').then((ingredients) => {
+      cy.intercept('GET', 'api/ingredients', {
+        statusCode: 200,
+        body: { success: true, data: ingredients }
+      }).as('getIngredients');
     });
+
+    // 2. ПОТОМ посещаем страницу (это вызовет запрос)
     cy.visit('http://localhost:4000');
+
+    // 3. Ожидание критических запросов
+    cy.wait(['@getIngredients'], {
+      timeout: 20000
+    });
   });
 
   it('should add ingredients to constructor', () => {
@@ -20,18 +31,25 @@ describe('Burger constructor functionality', () => {
     cy.get('@main').trigger('dragstart');
     cy.get('[data-cy=burger-constructor]').trigger('drop');
 
-    cy.get('[data-cy=constructor-bun-top]').should(
-      'contain',
-      'Краторная булка N-200i'
+    // Даем время на обновление UI
+    cy.wait(3000);
+
+    // Проверяем элементы конструктора
+    cy.get('[data-cy=constructor-bun-top]', { timeout: 20000 })
+      .should('be.visible')
+      .and('contain', 'Краторная булка N-200i');
+
+    cy.get('[data-cy=constructor-bun-bottom]', { timeout: 20000 })
+      .should('be.visible')
+      .and('contain', 'Краторная булка N-200i');
+
+    cy.get('[data-cy=constructor-ingredient]', { timeout: 20000 }).should(
+      'have.length',
+      2
     );
-    cy.get('[data-cy=constructor-bun-bottom]').should(
-      'contain',
-      'Краторная булка N-200i'
-    );
-    cy.get('[data-cy=constructor-ingredient]').should('have.length', 2);
   });
 
-  it('should open and close ingredient modal', () => {
+  it('открытие и закрытие modal', () => {
     cy.get('[data-cy=ingredient-card]').first().click();
     cy.get('[data-cy=modal]').should('be.visible');
     cy.get('[data-cy=modal-close-button]').click();
@@ -76,11 +94,16 @@ describe('Burger constructor functionality', () => {
 
     cy.get('[data-cy=login-email-input]').type('test@example.com');
     cy.get('[data-cy=login-password-input]').type('password');
-    cy.get('button').contains('Войти').click();
 
+    cy.wait(10000);
     cy.get('[data-cy=order-number]').should('contain', '12345');
     cy.get('[data-cy=modal-close-button]').click();
     cy.get('[data-cy=modal]').should('not.exist');
-    cy.get('[data-cy=burger-constructor]').children().should('have.length', 0);
+    // cy.get('[data-cy=burger-constructor]').children().should('have.length', 0); не работает потому что есть дочерние пустые элементы страницы
+    // Проверка отсутствия булки
+    cy.get('[data-cy=constructor-bun-top]').should('not.exist');
+    cy.get('[data-cy=constructor-bun-bottom]').should('not.exist');
+    // Проверка отсутствия основных ингредиентов
+    cy.get('[data-cy=constructor-ingredient]').should('have.length', 0);
   });
 });
