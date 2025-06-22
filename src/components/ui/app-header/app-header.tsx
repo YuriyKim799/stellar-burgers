@@ -26,6 +26,7 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => {
       <nav className={`${styles.menu} p-4`}>
         <div className={styles.menu_part_left}>
           <NavLink
+            data-cy='data-constructor-link'
             to={'/'}
             className={
               isConstructorActive ? `${styles.link_active}` : `${styles.link}`
@@ -51,6 +52,7 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => {
         </div>
         <div className={styles.link_position_last}>
           <NavLink
+            data-cy='data-login-link'
             to={isAuthenticated ? '/profile' : '/login'}
             className={
               isProfileActive ? `${styles.link_active}` : `${styles.link}`

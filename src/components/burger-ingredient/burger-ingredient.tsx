@@ -18,7 +18,6 @@ export const BurgerIngredient: FC<TBurgerIngredientProps> = memo(
 
     return (
       <BurgerIngredientUI
-        data-cy='ingredient-card'
         ingredient={ingredient}
         count={count}
         locationState={{ background: location }}
