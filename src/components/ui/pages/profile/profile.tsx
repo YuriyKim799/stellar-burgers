@@ -39,6 +39,7 @@ export const ProfileUI: FC<ProfileUIProps> = ({
         </div>
         <div className='pb-6'>
           <Input
+            data-cy='login-email-input'
             type={'email'}
             placeholder={'E-mail'}
             onChange={handleInputChange}
@@ -52,6 +53,7 @@ export const ProfileUI: FC<ProfileUIProps> = ({
         </div>
         <div className='pb-6'>
           <Input
+            data-cy='login-password-input'
             type={'password'}
             placeholder={'Пароль'}
             onChange={handleInputChange}

@@ -1,21 +1,46 @@
-import { FC, useMemo } from 'react';
+import { FC, useEffect, useMemo } from 'react';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
+import { RootState, useDispatch, useSelector } from '../../services/store';
+import { useParams } from 'react-router-dom';
+import {
+  getFeedByNumber,
+  getOrderByNumber
+} from '../../slices/ordersSlice/ordersSlice';
 
-export const OrderInfo: FC = () => {
-  /** TODO: взять переменные orderData и ingredients из стора */
-  const orderData = {
-    createdAt: '',
-    ingredients: [],
-    _id: '',
-    status: '',
-    name: '',
-    updatedAt: 'string',
-    number: 0
-  };
+type OrderInfoProps = {
+  isPrivate?: boolean;
+};
 
-  const ingredients: TIngredient[] = [];
+export const OrderInfo: FC<OrderInfoProps> = ({ isPrivate = false }) => {
+  const dispatch = useDispatch();
+  const { number } = useParams();
+
+  const ingredients: TIngredient[] =
+    useSelector((state: RootState) => state.ingredients.ingredients) ?? [];
+
+  // Получаем все заказы нужного типа
+  const orders = useSelector((state: RootState) =>
+    isPrivate ? state.orders.userOrders : state.orders.orders
+  );
+
+  // Находим конкретный заказ по номеру
+  const orderData = useMemo(() => {
+    if (!number || !orders) return null;
+    return orders.find((order) => order.number === Number(number));
+  }, [number, orders]);
+
+  // Если заказа нет в сторе, загружаем его
+  useEffect(() => {
+    if (!number || orderData) return;
+
+    if (isPrivate) {
+      dispatch(getOrderByNumber(Number(number)));
+    } else {
+      dispatch(getFeedByNumber(Number(number)));
+    }
+  }, [number, isPrivate, dispatch, orderData]);
 
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {
