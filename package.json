@@ -1,5 +1,6 @@
 {
   "name": "react-canonical",
+  "homepage": "https://yuriykim799.github.io/stellar-burgers",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
